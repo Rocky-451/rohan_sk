@@ -1,0 +1,52 @@
+#include <stdint.h>
+
+#define sensorPin 0  
+#define ledPin 13  
+#define coldThreshold 30  
+volatile unsigned long lastBlinkTime = 0; 
+volatile bool isCold = false;           
+
+//function prototypes
+void init_timer(uint32_t interval_ms);
+void set_timer_interrupt(void (*callback)());
+void delay_us(uint32_t microseconds);
+
+// Timer interrupt service routine 
+void timer_interrupt() {
+  // Placeholder, replace with actual implementation
+}
+
+void setup() {
+  // Set LED pin as output 
+  init_timer(1); // Initialize timer for 1ms intervals
+  set_timer_interrupt(timer_interrupt); // Set timer interrupt
+}
+
+void loop() {
+  // Read analog value from sensor 
+  int sensorValue = 0; // Placeholder, replace with actual sensor reading
+
+  // Convert analog value to temperature 
+  float voltage = sensorValue * 5.0 / 1023.0;
+  float temperature = voltage * 100.0;
+
+  // Update cold flag based on temperature
+  isCold = temperature < coldThreshold;
+
+  // Calculate blink interval based on temperature
+  uint32_t blinkInterval = isCold ? 250 : 500;
+}
+
+// Timer interrupt service routine 
+void timer_interrupt() {
+  static uint32_t counter = 0;
+  counter++;
+
+  // Check if enough time has passed for a blink based on counter value
+  if (counter % blinkInterval == 0) {
+    // Toggle LED state (platform-specific implementation needed)
+    lastBlinkTime = counter; // Update last blink time
+  }
+  
+ 
+}
